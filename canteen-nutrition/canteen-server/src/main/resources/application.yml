@@ -1,0 +1,55 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: canteen-server
+  #数据库、Redis等环境相关配置放在对应的profile中
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 100MB
+  #SpringCache注解走Redis，缓存名与过期时间见 RedisConfiguration
+  cache:
+    type: redis
+
+#Mybatis的相关配置
+mybatis:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    #开启驼峰命名映射开关
+    map-underscore-to-camel-case: true
+
+#分页插件配置
+pagehelper:
+  reasonable: true
+  support-methods-arguments: true
+
+#配置事务管理日志级别
+logging:
+  level:
+    org.springframework.jdbc.support.JdbcTransactionManager: debug
+
+#JWT令牌配置
+jwt:
+  secret: ${JWT_SECRET:canteen-nutrition-graduation-design-secret-key}
+  #令牌有效期（毫秒），默认7天，与Redis中登录态的过期时间保持一致
+  ttl: 604800000
+
+#AI大模型配置（OpenAI兼容协议），不配置 api-key 时自动降级为内置规则估算
+ai:
+  base-url: ${AI_BASE_URL:https://dashscope.aliyuncs.com/compatible-mode/v1}
+  api-key: ${OPENAI_API_KEY:}
+  model: ${AI_MODEL:qwen-plus}
+  #单次调用超时时间（秒）
+  timeout-seconds: 20
+
+#阿里云OSS配置：访问凭证走环境变量 OSS_ACCESS_KEY_ID / OSS_ACCESS_KEY_SECRET，不写进配置文件
+aliyun:
+  oss:
+    endpoint: ${OSS_ENDPOINT:https://oss-cn-beijing.aliyuncs.com}
+    bucket-name: ${OSS_BUCKET:}
+    region: ${OSS_REGION:cn-beijing}
