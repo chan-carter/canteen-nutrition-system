@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.health.canteen.mapper.UserMapper">
+
+    <select id="getUserPage" resultType="com.health.canteen.entity.User">
+        select u.id, u.username, u.nickname, u.role, u.phone, u.merchant_id, u.health_goal,
+               u.preference, u.taboo, u.status, u.create_time, u.update_time, m.name merchantName
+        from user u left join merchant m on u.merchant_id = m.id
+        <where>
+            <if test="username != null and username != ''">
+                u.username like CONCAT('%', #{username}, '%')
+            </if>
+            <if test="role != null">
+                and u.role = #{role}
+            </if>
+            <if test="status != null">
+                and u.status = #{status}
+            </if>
+        </where>
+        order by u.update_time desc
+    </select>
+
+    <select id="getUserById" resultType="com.health.canteen.entity.User">
+        select u.id, u.username, u.nickname, u.role, u.phone, u.merchant_id, u.health_goal,
+               u.preference, u.taboo, u.status, u.create_time, u.update_time, m.name merchantName
+        from user u left join merchant m on u.merchant_id = m.id
+        where u.id = #{id}
+    </select>
+
+    <select id="getByUsername" resultType="com.health.canteen.entity.User">
+        select id, username, password, nickname, role, phone, merchant_id, health_goal,
+               preference, taboo, status, create_time, update_time
+        from user
+        where username = #{username}
+    </select>
+
+    <insert id="addUser" useGeneratedKeys="true" keyProperty="id">
+        insert into user (username, password, nickname, role, phone, merchant_id, health_goal,
+                          preference, taboo, status, create_time, update_time)
+        values (#{username}, #{password}, #{nickname}, #{role}, #{phone}, #{merchantId}, #{healthGoal},
+                #{preference}, #{taboo}, #{status}, #{createTime}, #{updateTime})
+    </insert>
+
+    <update id="updateUser">
+        update user
+        <set>
+            <if test="nickname != null and nickname != ''">
+                nickname = #{nickname},
+            </if>
+            <if test="phone != null">
+                phone = #{phone},
+            </if>
+            <if test="healthGoal != null">
+                health_goal = #{healthGoal},
+            </if>
+            <if test="preference != null">
+                preference = #{preference},
+            </if>
+            <if test="taboo != null">
+                taboo = #{taboo},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="merchantId != null">
+                merchant_id = #{merchantId},
+            </if>
+            <if test="role != null">
+                role = #{role},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteUser">
+        delete from user where id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="updatePassword">
+        update user set password = #{password}, update_time = #{updateTime} where id = #{id}
+    </update>
+
+    <update id="updateStatus">
+        update user set status = #{status}, update_time = #{updateTime} where id = #{id}
+    </update>
+
+    <select id="countByMerchantId" resultType="java.lang.Integer">
+        select count(*) from user where merchant_id = #{merchantId}
+    </select>
+
+</mapper>
