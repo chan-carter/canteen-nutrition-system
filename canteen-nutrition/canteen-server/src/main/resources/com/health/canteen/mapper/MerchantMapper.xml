@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.health.canteen.mapper.MerchantMapper">
+
+    <select id="getMerchantPage" resultType="com.health.canteen.entity.Merchant">
+        select m.id, m.name, m.contact, m.phone, m.address, m.description, m.status,
+               m.create_time, m.update_time,
+               (select count(*) from stall s where s.merchant_id = m.id) stallCount
+        from merchant m
+        <where>
+            <if test="name != null and name != ''">
+                m.name like CONCAT('%', #{name}, '%')
+            </if>
+            <if test="status != null">
+                and m.status = #{status}
+            </if>
+        </where>
+        order by m.id asc
+    </select>
+
+    <select id="getMerchantById" resultType="com.health.canteen.entity.Merchant">
+        select m.id, m.name, m.contact, m.phone, m.address, m.description, m.status,
+               m.create_time, m.update_time
+        from merchant m
+        where m.id = #{id}
+    </select>
+
+    <insert id="addMerchant" useGeneratedKeys="true" keyProperty="id">
+        insert into merchant (name, contact, phone, address, description, status, create_time, update_time)
+        values (#{name}, #{contact}, #{phone}, #{address}, #{description}, #{status}, #{createTime}, #{updateTime})
+    </insert>
+
+    <update id="updateMerchant">
+        update merchant
+        <set>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="contact != null">
+                contact = #{contact},
+            </if>
+            <if test="phone != null">
+                phone = #{phone},
+            </if>
+            <if test="address != null">
+                address = #{address},
+            </if>
+            <if test="description != null">
+                description = #{description},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <update id="updateMerchantStatus">
+        update merchant set status = #{status}, update_time = #{updateTime} where id = #{id}
+    </update>
+
+    <delete id="deleteMerchant">
+        delete from merchant where id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

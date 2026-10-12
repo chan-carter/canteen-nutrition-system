@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.health.canteen.mapper.DishCategoryMapper">
+
+    <select id="getCategoryPage" resultType="com.health.canteen.entity.DishCategory">
+        select c.id, c.name, c.sort_num, c.remark, c.status, c.create_time, c.update_time,
+               (select count(*) from dish d where d.category_id = c.id) dishCount
+        from dish_category c
+        <where>
+            <if test="name != null and name != ''">
+                c.name like CONCAT('%', #{name}, '%')
+            </if>
+            <if test="status != null">
+                and c.status = #{status}
+            </if>
+        </where>
+        order by c.sort_num asc, c.id asc
+    </select>
+
+    <select id="getEnabledCategories" resultType="com.health.canteen.entity.DishCategory">
+        select id, name, sort_num, remark, status, create_time, update_time
+        from dish_category
+        where status = 1
+        order by sort_num asc, id asc
+    </select>
+
+    <select id="getCategoryById" resultType="com.health.canteen.entity.DishCategory">
+        select id, name, sort_num, remark, status, create_time, update_time
+        from dish_category
+        where id = #{id}
+    </select>
+
+    <insert id="addCategory" useGeneratedKeys="true" keyProperty="id">
+        insert into dish_category (name, sort_num, remark, status, create_time, update_time)
+        values (#{name}, #{sortNum}, #{remark}, #{status}, #{createTime}, #{updateTime})
+    </insert>
+
+    <update id="updateCategory">
+        update dish_category
+        <set>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="sortNum != null">
+                sort_num = #{sortNum},
+            </if>
+            <if test="remark != null">
+                remark = #{remark},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCategory">
+        delete from dish_category where id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="countDishByCategoryId" resultType="java.lang.Integer">
+        select count(*) from dish where category_id = #{categoryId}
+    </select>
+
+</mapper>
