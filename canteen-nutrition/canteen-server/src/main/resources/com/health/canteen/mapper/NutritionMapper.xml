@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.health.canteen.mapper.NutritionMapper">
+
+    <select id="getByDishId" resultType="com.health.canteen.entity.Nutrition">
+        select n.id, n.dish_id, n.calorie, n.protein, n.fat, n.carbohydrate, n.fiber, n.sodium,
+               n.analysis_text, n.source, n.model_name, n.create_time, n.update_time,
+               d.name dishName, d.ingredients
+        from nutrition n left join dish d on n.dish_id = d.id
+        where n.dish_id = #{dishId}
+    </select>
+
+    <insert id="saveOrUpdate">
+        insert into nutrition (dish_id, calorie, protein, fat, carbohydrate, fiber, sodium,
+                               analysis_text, source, model_name, create_time, update_time)
+        values (#{dishId}, #{calorie}, #{protein}, #{fat}, #{carbohydrate}, #{fiber}, #{sodium},
+                #{analysisText}, #{source}, #{modelName}, #{createTime}, #{updateTime})
+        on duplicate key update
+            calorie = #{calorie}, protein = #{protein}, fat = #{fat}, carbohydrate = #{carbohydrate},
+            fiber = #{fiber}, sodium = #{sodium}, analysis_text = #{analysisText}, source = #{source},
+            model_name = #{modelName}, update_time = #{updateTime}
+    </insert>
+
+    <delete id="deleteByDishIds">
+        delete from nutrition where dish_id in
+        <foreach collection="dishIds" item="dishId" separator="," open="(" close=")">
+            #{dishId}
+        </foreach>
+    </delete>
+
+</mapper>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.health.canteen.mapper.AiCallLogMapper">
+
+    <insert id="addLog" useGeneratedKeys="true" keyProperty="id">
+        insert into ai_call_log (dish_id, call_type, model_name, success, cost_ms, error_msg, raw_content, create_time)
+        values (#{dishId}, #{callType}, #{modelName}, #{success}, #{costMs}, #{errorMsg}, #{rawContent}, #{createTime})
+    </insert>
+
+    <select id="getCallCountData" resultType="java.util.Map">
+        select case success when 1 then '调用成功' else '调用失败' end name, count(*) value
+        from ai_call_log
+        group by success
+    </select>
+
+</mapper>
