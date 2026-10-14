@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.health.canteen.mapper.OrderItemMapper">
+
+    <insert id="batchAdd">
+        insert into order_item (order_id, dish_id, dish_name, quantity, price, amount)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.orderId}, #{item.dishId}, #{item.dishName}, #{item.quantity}, #{item.price}, #{item.amount})
+        </foreach>
+    </insert>
+
+    <select id="getByOrderId" resultType="com.health.canteen.entity.OrderItem">
+        select oi.id, oi.order_id, oi.dish_id, oi.dish_name, oi.quantity, oi.price, oi.amount, d.image
+        from order_item oi left join dish d on oi.dish_id = d.id
+        where oi.order_id = #{orderId}
+        order by oi.id asc
+    </select>
+
+    <delete id="deleteByOrderIds">
+        delete from order_item where order_id in
+        <foreach collection="orderIds" item="orderId" separator="," open="(" close=")">
+            #{orderId}
+        </foreach>
+    </delete>
+
+</mapper>
