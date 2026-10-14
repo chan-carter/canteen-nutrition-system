@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.health.canteen.mapper.RecommendationMapper">
+
+    <delete id="deleteByUserId">
+        delete from recommendation where user_id = #{userId}
+    </delete>
+
+    <insert id="batchAdd">
+        insert into recommendation (user_id, dish_id, reason, score, health_goal, create_time)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.userId}, #{item.dishId}, #{item.reason}, #{item.score}, #{item.healthGoal}, #{item.createTime})
+        </foreach>
+    </insert>
+
+    <select id="getByUserId" resultType="com.health.canteen.entity.Recommendation">
+        select r.id, r.user_id, r.dish_id, r.reason, r.score, r.health_goal, r.create_time,
+               d.name dishName, u.nickname
+        from recommendation r
+            left join dish d on r.dish_id = d.id
+            left join user u on r.user_id = u.id
+        where r.user_id = #{userId}
+        order by r.score desc
+    </select>
+
+    <select id="getRecommendHotData" resultType="java.util.Map">
+        select d.name name, count(*) value
+        from recommendation r inner join dish d on r.dish_id = d.id
+        group by r.dish_id, d.name
+        order by value desc
+        limit 10
+    </select>
+
+</mapper>
