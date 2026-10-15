@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.health.canteen.mapper.AnnouncementMapper">
+
+    <select id="getAnnouncementPage" resultType="com.health.canteen.entity.Announcement">
+        select id, title, content, status, create_time, update_time
+        from announcement
+        <where>
+            <if test="title != null and title != ''">
+                title like CONCAT('%', #{title}, '%')
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+        </where>
+        order by update_time desc, id desc
+    </select>
+
+    <select id="getPublished" resultType="com.health.canteen.entity.Announcement">
+        select id, title, content, status, create_time, update_time
+        from announcement
+        where status = 1
+        order by create_time desc
+    </select>
+
+    <select id="getUnreadPublished" resultType="com.health.canteen.entity.Announcement">
+        select a.id, a.title, a.content, a.status, a.create_time, a.update_time
+        from announcement a
+        where a.status = 1
+          and not exists (select 1 from announcement_read r
+                          where r.announcement_id = a.id and r.user_id = #{userId})
+        order by a.create_time desc, a.id desc
+    </select>
+
+    <!-- 一次性把当前已发布的公告记为该用户已读，唯一索引兜住并发重复 -->
+    <insert id="markAllRead">
+        insert ignore into announcement_read (announcement_id, user_id, read_time)
+        select a.id, #{userId}, now()
+        from announcement a
+        where a.status = 1
+    </insert>
+
+    <select id="getById" resultType="com.health.canteen.entity.Announcement">
+        select id, title, content, status, create_time, update_time
+        from announcement
+        where id = #{id}
+    </select>
+
+    <insert id="add" useGeneratedKeys="true" keyProperty="id">
+        insert into announcement (title, content, status, create_time, update_time)
+        values (#{title}, #{content}, #{status}, #{createTime}, #{updateTime})
+    </insert>
+
+    <update id="update">
+        update announcement
+        <set>
+            <if test="title != null and title != ''">
+                title = #{title},
+            </if>
+            <if test="content != null">
+                content = #{content},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <update id="updateStatus">
+        update announcement set status = #{status}, update_time = #{updateTime} where id = #{id}
+    </update>
+
+    <delete id="delete">
+        delete from announcement where id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <delete id="deleteReadByAnnouncementIds">
+        delete from announcement_read where announcement_id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

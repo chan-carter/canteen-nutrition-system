@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.health.canteen.mapper.ReportMapper">
+
+    <select id="getDishCategoryData" resultType="java.util.Map">
+        select c.name name, count(d.id) value
+        from dish_category c left join dish d on d.category_id = c.id
+        group by c.id, c.name
+        order by value desc
+    </select>
+
+    <select id="getDishSalesData" resultType="java.util.Map">
+        select d.name name, sum(oi.quantity) value
+        from order_item oi
+            inner join dish d on oi.dish_id = d.id
+            inner join stall s on d.stall_id = s.id
+            inner join orders o on oi.order_id = o.id
+        where o.status = 3
+        <if test="merchantId != null">
+            and s.merchant_id = #{merchantId}
+        </if>
+        group by d.id, d.name
+        order by value desc
+        limit 10
+    </select>
+
+    <select id="getHealthGoalData" resultType="java.util.Map">
+        select case when health_goal is null or health_goal = '' then '未设置' else health_goal end name,
+               count(*) value
+        from user
+        where role = 1
+        group by case when health_goal is null or health_goal = '' then '未设置' else health_goal end
+        order by value desc
+    </select>
+
+    <select id="getOrderData" resultType="java.util.Map">
+        select date_format(create_time, '%Y-%m-%d') name, count(*) value
+        from orders
+        group by date_format(create_time, '%Y-%m-%d')
+        order by name desc
+        limit 14
+    </select>
+
+    <select id="getReviewData" resultType="java.util.Map">
+        select concat(r.rating, '星') name, count(*) value
+        from review r
+        where r.status = 1
+        group by r.rating
+        order by r.rating desc
+    </select>
+
+    <select id="getOverviewData" resultType="java.util.Map">
+        select
+            (select count(*) from user where role = 1) studentCount,
+            (select count(*) from user where role = 2) merchantUserCount,
+            (select count(*) from merchant) merchantCount,
+            (select count(*) from stall) stallCount,
+            (select count(*) from dish) dishCount,
+            (select count(*) from dish where status = 1) onlineDishCount,
+            (select count(*) from dish where audit_status = 0) waitAuditCount,
+            (select count(*) from nutrition) nutritionCount,
+            (select count(*) from orders) orderCount,
+            (select count(*) from orders where status = 1) waitOrderCount,
+            (select count(*) from review) reviewCount,
+            (select count(*) from recommendation) recommendCount,
+            (select ifnull(sum(total_amount), 0) from orders where status &lt;&gt; 4) orderAmount,
+            (select count(*) from ai_call_log where success = 0) aiFailCount
+    </select>
+
+</mapper>
