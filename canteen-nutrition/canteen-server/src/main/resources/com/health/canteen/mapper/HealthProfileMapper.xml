@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.health.canteen.mapper.HealthProfileMapper">
+
+    <select id="getByUserId" resultType="com.health.canteen.entity.HealthProfile">
+        select id, user_id, gender, birthday, height_cm, weight_kg, activity_level, health_goal,
+               bmr, tdee, target_calorie, target_protein, target_fat, target_carb,
+               create_time, update_time
+        from health_profile
+        where user_id = #{userId}
+    </select>
+
+    <insert id="saveOrUpdate">
+        insert into health_profile (user_id, gender, birthday, height_cm, weight_kg, activity_level,
+                                    health_goal, bmr, tdee, target_calorie, target_protein, target_fat,
+                                    target_carb, create_time, update_time)
+        values (#{userId}, #{gender}, #{birthday}, #{heightCm}, #{weightKg}, #{activityLevel},
+                #{healthGoal}, #{bmr}, #{tdee}, #{targetCalorie}, #{targetProtein}, #{targetFat},
+                #{targetCarb}, #{createTime}, #{updateTime})
+        on duplicate key update
+            gender = #{gender}, birthday = #{birthday}, height_cm = #{heightCm}, weight_kg = #{weightKg},
+            activity_level = #{activityLevel}, health_goal = #{healthGoal}, bmr = #{bmr}, tdee = #{tdee},
+            target_calorie = #{targetCalorie}, target_protein = #{targetProtein}, target_fat = #{targetFat},
+            target_carb = #{targetCarb}, update_time = #{updateTime}
+    </insert>
+
+</mapper>

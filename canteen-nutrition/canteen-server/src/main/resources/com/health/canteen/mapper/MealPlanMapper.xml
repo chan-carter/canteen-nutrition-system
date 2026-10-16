@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.health.canteen.mapper.MealPlanMapper">
+
+    <delete id="deleteByUserRange">
+        delete from meal_plan
+        where user_id = #{userId} and plan_date between #{start} and #{end}
+    </delete>
+
+    <insert id="batchInsert">
+        insert into meal_plan (user_id, plan_date, meal_type, dish_id, dish_name, planned_calorie,
+                               adopted, create_time, update_time)
+        values
+        <foreach collection="plans" item="p" separator=",">
+            (#{p.userId}, #{p.planDate}, #{p.mealType}, #{p.dishId}, #{p.dishName}, #{p.plannedCalorie},
+             #{p.adopted}, #{p.createTime}, #{p.updateTime})
+        </foreach>
+    </insert>
+
+    <select id="listByUserRange" resultType="com.health.canteen.entity.MealPlan">
+        select id, user_id, plan_date, meal_type, dish_id, dish_name, planned_calorie, adopted,
+               create_time, update_time
+        from meal_plan
+        where user_id = #{userId} and plan_date between #{start} and #{end}
+        order by plan_date asc, field(meal_type, '早餐', '午餐', '晚餐', '加餐') asc, id asc
+    </select>
+
+    <update id="markAdopted">
+        update meal_plan set adopted = 1, update_time = now()
+        where id = #{id} and user_id = #{userId}
+    </update>
+
+</mapper>

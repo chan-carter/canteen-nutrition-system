@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.health.canteen.mapper.WeightLogMapper">
+
+    <insert id="add" useGeneratedKeys="true" keyProperty="id">
+        insert into weight_log (user_id, weight_kg, record_date, note, create_time)
+        values (#{userId}, #{weightKg}, #{recordDate}, #{note}, #{createTime})
+    </insert>
+
+    <select id="listSince" resultType="com.health.canteen.entity.WeightLog">
+        select id, user_id, weight_kg, record_date, note, create_time
+        from weight_log
+        where user_id = #{userId} and record_date &gt;= #{since}
+        order by record_date asc, id asc
+    </select>
+
+</mapper>

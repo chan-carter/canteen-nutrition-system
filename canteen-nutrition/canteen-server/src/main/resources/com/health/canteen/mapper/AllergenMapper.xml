@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.health.canteen.mapper.AllergenMapper">
+
+    <select id="listAll" resultType="com.health.canteen.entity.Allergen">
+        select id, code, name from allergen order by id asc
+    </select>
+
+    <select id="listByDishId" resultType="com.health.canteen.entity.Allergen">
+        select a.id, a.code, a.name
+        from allergen a join dish_allergen da on da.allergen_id = a.id
+        where da.dish_id = #{dishId}
+        order by a.id asc
+    </select>
+
+    <delete id="deleteByDishId">
+        delete from dish_allergen where dish_id = #{dishId}
+    </delete>
+
+    <insert id="batchInsert">
+        insert ignore into dish_allergen (dish_id, allergen_id) values
+        <foreach collection="allergenIds" item="aid" separator=",">
+            (#{dishId}, #{aid})
+        </foreach>
+    </insert>
+
+</mapper>
