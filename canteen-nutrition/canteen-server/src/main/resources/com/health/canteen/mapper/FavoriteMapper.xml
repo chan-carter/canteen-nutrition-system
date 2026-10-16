@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.health.canteen.mapper.FavoriteMapper">
+
+    <insert id="add">
+        insert ignore into favorite (user_id, dish_id, create_time)
+        values (#{userId}, #{dishId}, now())
+    </insert>
+
+    <delete id="delete">
+        delete from favorite where user_id = #{userId} and dish_id = #{dishId}
+    </delete>
+
+    <select id="listFavoriteDishes" resultType="com.health.canteen.vo.FavoriteDishVO">
+        select d.id dishId, d.name dishName, d.price, d.image, d.status, n.calorie, s.name stallName
+        from favorite f
+        join dish d on f.dish_id = d.id
+        left join nutrition n on n.dish_id = d.id
+        left join stall s on s.id = d.stall_id
+        where f.user_id = #{userId}
+        order by f.id desc
+    </select>
+
+</mapper>

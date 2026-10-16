@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.health.canteen.mapper.AiChatMapper">
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into ai_chat_message (user_id, session_id, role, content, model_name, success, cost_ms, create_time)
+        values (#{userId}, #{sessionId}, #{role}, #{content}, #{modelName}, #{success}, #{costMs}, #{createTime})
+    </insert>
+
+    <select id="listBySession" resultType="com.health.canteen.entity.AiChatMessage">
+        select id, user_id, session_id, role, content, model_name, success, cost_ms, create_time
+        from ai_chat_message
+        where user_id = #{userId} and session_id = #{sessionId}
+        order by id desc
+        limit #{limit}
+    </select>
+
+</mapper>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.health.canteen.mapper.NotificationMapper">
+
+    <insert id="add" useGeneratedKeys="true" keyProperty="id">
+        insert into notification (user_id, type, title, content, biz_id, is_read, create_time)
+        values (#{userId}, #{type}, #{title}, #{content}, #{bizId}, 0, #{createTime})
+    </insert>
+
+    <select id="listByUser" resultType="com.health.canteen.entity.Notification">
+        select id, user_id, type, title, content, biz_id, is_read, create_time
+        from notification
+        where user_id = #{userId}
+        order by id desc
+        limit #{limit}
+    </select>
+
+    <select id="countUnread" resultType="int">
+        select count(*) from notification where user_id = #{userId} and is_read = 0
+    </select>
+
+    <update id="markRead">
+        update notification set is_read = 1 where id = #{id} and user_id = #{userId}
+    </update>
+
+    <update id="markAllRead">
+        update notification set is_read = 1 where user_id = #{userId} and is_read = 0
+    </update>
+
+</mapper>
