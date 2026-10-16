@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.health.canteen.mapper.DashboardMapper">
+
+    <select id="globalStats" resultType="java.util.Map">
+        select
+          (select count(*) from user where role = 1) as studentCount,
+          (select count(*) from merchant) as merchantCount,
+          (select count(*) from dish) as dishCount,
+          (select count(*) from orders) as orderCount,
+          (select ifnull(sum(total_amount),0) from orders where status = 3) as totalRevenue,
+          (select count(*) from orders where date(create_time) = curdate()) as todayOrders,
+          (select ifnull(sum(total_amount),0) from orders where status = 3 and date(create_time) = curdate()) as todayRevenue
+    </select>
+
+    <select id="categoryDist" resultType="java.util.Map">
+        select c.name as name, count(d.id) as value
+        from dish_category c left join dish d on d.category_id = c.id
+        group by c.id, c.name order by value desc
+    </select>
+
+    <select id="topDishes" resultType="java.util.Map">
+        select name as name, sales as value from dish where sales is not null
+        order by sales desc limit 8
+    </select>
+
+    <select id="calorieDist" resultType="java.util.Map">
+        select
+          sum(case when n.calorie &lt; 200 then 1 else 0 end) as low,
+          sum(case when n.calorie between 200 and 400 then 1 else 0 end) as mid,
+          sum(case when n.calorie &gt; 400 then 1 else 0 end) as high
+        from nutrition n
+    </select>
+
+    <select id="aiStats" resultType="java.util.Map">
+        select count(*) as total,
+               ifnull(sum(success),0) as successCount,
+               ifnull(round(avg(cost_ms),0),0) as avgCostMs
+        from ai_call_log
+    </select>
+
+    <select id="healthStats" resultType="java.util.Map">
+        select
+          (select count(*) from health_profile) as profileCount,
+          (select count(*) from diet_record) as dietRecordCount,
+          (select count(*) from weight_log) as weightLogCount,
+          (select count(*) from meal_plan) as mealPlanCount,
+          (select count(*) from favorite) as favoriteCount,
+          (select count(*) from ai_chat_message) as chatMessageCount,
+          (select count(*) from notification) as notificationCount
+    </select>
+
+    <select id="orderStatusDist" resultType="java.util.Map">
+        select case status when 1 then '待接单' when 2 then '已接单' when 5 then '待取餐'
+                           when 3 then '已完成' when 4 then '已取消' else '其他' end as name,
+               count(*) as value
+        from orders
+        group by status order by status asc
+    </select>
+
+</mapper>

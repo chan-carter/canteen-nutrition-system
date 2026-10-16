@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.health.canteen.mapper.ExportMapper">
+
+    <select id="listDishes" resultType="com.health.canteen.export.DishExportVO">
+        select d.name, c.name categoryName, s.name stallName, d.price, d.sales, n.calorie,
+               case d.status when 1 then '上架' else '下架' end statusText
+        from dish d
+        left join dish_category c on c.id = d.category_id
+        left join stall s on s.id = d.stall_id
+        left join nutrition n on n.dish_id = d.id
+        <where>
+            <if test="merchantId != null">s.merchant_id = #{merchantId}</if>
+        </where>
+        order by d.id asc
+    </select>
+
+    <select id="listOrders" resultType="com.health.canteen.export.OrderExportVO">
+        select o.order_no orderNo, u.nickname userNickname, o.total_amount totalAmount,
+               o.total_calorie totalCalorie, o.create_time createTime,
+               case o.status when 1 then '待接单' when 2 then '已接单' when 5 then '待取餐'
+                             when 3 then '已完成' when 4 then '已取消' else '未知' end statusText
+        from orders o
+        left join user u on u.id = o.user_id
+        <where>
+            <if test="merchantId != null">o.merchant_id = #{merchantId}</if>
+        </where>
+        order by o.id desc
+    </select>
+
+</mapper>
