@@ -1,0 +1,24 @@
+[Unit]
+Description=校园食堂菜品营养分析与推荐系统 (canteen-server)
+After=network-online.target mysql.service redis-server.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=canteen
+WorkingDirectory=/opt/canteen
+# 数据库口令、AI/OSS 密钥都放这个文件，不进仓库；文件属主为 canteen 且权限 600
+EnvironmentFile=/opt/canteen/canteen.env
+ExecStart=/bin/sh -c '/usr/bin/java $JAVA_OPTS -jar /opt/canteen/canteen-server-1.0.0.jar'
+SuccessExitStatus=143
+Restart=on-failure
+RestartSec=5
+# 应用日志走 journald：journalctl -u canteen -f
+StandardOutput=journal
+StandardError=journal
+# 基础加固
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

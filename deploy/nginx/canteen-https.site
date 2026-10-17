@@ -1,0 +1,21 @@
+# 安装位置：/etc/nginx/sites-available/canteen-https，证书就位后再软链到 sites-enabled
+# 用法：替换两处 <DOMAIN>。证书路径与 deploy/README.md 里 acme.sh 的 --install-cert 一致。
+#
+# 域名未 ICP 备案前，境内服务器上用域名访问 443 仍会被云厂商拦截；
+# 但证书本身可以用 DNS-01 验证先签好（不依赖 80 端口和备案），备案一生效即可直接启用。
+
+server {
+    listen 443 ssl http2;
+    server_name <DOMAIN>;
+
+    ssl_certificate     /etc/nginx/ssl/canteen/fullchain.pem;
+    ssl_certificate_key /etc/nginx/ssl/canteen/privkey.pem;
+    ssl_protocols       TLSv1.2 TLSv1.3;
+    ssl_ciphers         HIGH:!aNULL:!MD5;
+    ssl_session_cache   shared:SSL:10m;
+    ssl_session_timeout 1h;
+
+    add_header Strict-Transport-Security "max-age=31536000" always;
+
+    include snippets/canteen-app.conf;
+}

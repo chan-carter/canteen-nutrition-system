@@ -1,0 +1,13 @@
+# 安装位置：/etc/nginx/sites-available/canteen-http，软链到 sites-enabled
+# 由 install.sh 用 sed 把 <DOMAIN> 替换成真实域名；未提供域名时替换成 "_"，
+# 于是用 http://服务器IP 也能命中本 server（境内云厂商只拦截未备案"域名"的访问，IP 直连不受影响）。
+#
+# 刻意不做 http->https 整体跳转：备案生效前用 IP 访问会被 302 到一个没有可信证书的
+# https 域名，反而打不开。备案后如需强制 https，再单独加 return 301。
+
+server {
+    listen 80 default_server;
+    server_name <DOMAIN>;
+
+    include snippets/canteen-app.conf;
+}
