@@ -1,0 +1,833 @@
+/* ============================================================
+   全局样式：设计令牌 + Element Plus 主题覆盖 + 通用布局类
+   配色沿用「食堂/营养」的暖色系，深色侧栏 + 琥珀主色
+   ============================================================ */
+
+:root {
+  --brand: #f08c2e;
+  --brand-strong: #d97317;
+  --brand-soft: #fff5e9;
+  --brand-ring: rgba(240, 140, 46, 0.28);
+  --ink: #1f2430;
+  --ink-soft: #5b6472;
+  --ink-faint: #98a1af;
+  --surface: #ffffff;
+  --surface-sunken: #f6f7f9;
+  --line: #e9ebf0;
+  --success: #2fa36b;
+  --danger: #e35d5d;
+  --sidebar-from: #22262f;
+  --sidebar-to: #191c23;
+
+  --radius-sm: 8px;
+  --radius: 12px;
+  --radius-lg: 18px;
+  --shadow-sm: 0 1px 2px rgba(24, 32, 48, 0.05), 0 1px 3px rgba(24, 32, 48, 0.05);
+  --shadow: 0 4px 16px rgba(24, 32, 48, 0.07);
+  --shadow-lg: 0 16px 40px rgba(24, 32, 48, 0.14);
+
+  /* Element Plus 变量覆盖 */
+  --el-color-primary: var(--brand);
+  --el-color-primary-light-3: #f5ab63;
+  --el-color-primary-light-5: #f8c08a;
+  --el-color-primary-light-7: #fad6b1;
+  --el-color-primary-light-8: #fce3ca;
+  --el-color-primary-light-9: #fff2e2;
+  --el-color-primary-dark-2: var(--brand-strong);
+  --el-color-success: var(--success);
+  --el-color-danger: var(--danger);
+  --el-border-radius-base: var(--radius-sm);
+  --el-border-radius-small: 6px;
+  --el-text-color-primary: var(--ink);
+  --el-text-color-regular: var(--ink-soft);
+  --el-border-color: var(--line);
+  --el-border-color-light: var(--line);
+  --el-border-color-lighter: #f0f1f5;
+  --el-fill-color-blank: var(--surface);
+  --el-box-shadow-light: var(--shadow);
+  --el-font-weight-primary: 600;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  background-color: var(--surface-sunken);
+  color: var(--ink);
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 数字用等宽字形，表格与统计卡片对齐更整齐 */
+.el-table .cell,
+.el-statistic__content,
+.price {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------------- 页面骨架 ---------------- */
+
+.page {
+  padding: 4px;
+}
+
+.page-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.page-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  margin: 0;
+}
+
+.page-title::before {
+  content: '';
+  width: 4px;
+  height: 17px;
+  border-radius: 3px;
+  background: linear-gradient(180deg, var(--brand), #f7b95c);
+}
+
+.page-desc {
+  color: var(--ink-faint);
+  font-size: 12.5px;
+  margin-top: 5px;
+}
+
+.search-bar {
+  margin-bottom: 14px;
+}
+
+/* 控制台列表页：单独出现的标题与下方卡片之间留出一条稳定间距 */
+.page > .page-title {
+  margin-bottom: 16px;
+}
+
+/* 筛选区与表格之间加分隔线，读起来像一条工具栏 */
+.el-card .search-bar {
+  padding-bottom: 12px;
+  border-bottom: 1px dashed var(--el-border-color-lighter);
+}
+
+.el-card .search-bar .el-form-item {
+  margin-bottom: 8px;
+}
+
+.search-bar .el-card__body {
+  padding-bottom: 2px;
+}
+
+.pagination-bar {
+  margin-top: 16px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.muted {
+  color: var(--ink-faint);
+  font-size: 12.5px;
+}
+
+.price {
+  color: var(--brand-strong);
+  font-weight: 700;
+}
+
+/* ---------------- 通用组件观感 ---------------- */
+
+.el-card {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm) !important;
+  transition: box-shadow 0.22s ease, transform 0.22s ease, border-color 0.22s ease;
+}
+
+.el-card__header {
+  border-bottom: 1px solid var(--el-border-color-lighter);
+  font-weight: 600;
+  padding: 14px 18px;
+}
+
+.el-button {
+  border-radius: var(--radius-sm);
+  font-weight: 500;
+}
+
+.el-button--small {
+  border-radius: 7px;
+}
+
+.el-tag {
+  border-radius: 999px;
+  font-weight: 500;
+}
+
+.el-table {
+  --el-table-header-bg-color: #fafbfc;
+  --el-table-border-color: var(--el-border-color-lighter);
+}
+
+.el-table th.el-table__cell {
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+
+.el-table__row:hover > td.el-table__cell {
+  background: var(--brand-soft) !important;
+}
+
+.el-dialog {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.el-drawer__header {
+  margin-bottom: 0;
+}
+
+.el-descriptions__label {
+  color: var(--ink-faint) !important;
+  font-weight: 500;
+}
+
+.el-form-item__label {
+  color: var(--ink-soft);
+  font-weight: 500;
+}
+
+.el-menu {
+  border-right: none;
+}
+
+.el-tabs__item.is-active {
+  font-weight: 600;
+}
+
+/* 细滚动条，避免默认灰色粗条破坏留白 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d3d8e0;
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #b9c1cc;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+:focus-visible {
+  outline: 2px solid var(--brand-ring);
+  outline-offset: 1px;
+}
+
+/* ---------------- 业务通用块 ---------------- */
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(268px, 1fr));
+  gap: 16px;
+}
+
+.nutrition-tag {
+  margin-right: 6px;
+}
+
+/* 营养指标小徽章 */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 9px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 500;
+  background: var(--surface-sunken);
+  color: var(--ink-soft);
+  border: 1px solid var(--el-border-color-lighter);
+}
+
+.chip.is-hot {
+  background: var(--brand-soft);
+  border-color: #f7dcc0;
+  color: var(--brand-strong);
+}
+
+.chip.is-green {
+  background: #eef8f2;
+  border-color: #cfe9db;
+  color: #1f7d51;
+}
+
+/* 统计卡片：图标与数值横向排列（el-card 的实际容器是 __body） */
+.stat-card .el-card__body {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.stat-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card .stat-icon {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  flex: none;
+  border-radius: 14px;
+  font-size: 22px;
+  background: var(--brand-soft);
+  color: var(--brand-strong);
+}
+
+.stat-card .stat-value {
+  font-size: 25px;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.stat-card .stat-label {
+  color: var(--ink-faint);
+  font-size: 12.5px;
+  white-space: nowrap;
+}
+
+/* 图片占位（无图菜品用首字渐变块，避免出现破图） */
+.thumb-fallback {
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-size: 26px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #f6b95f, #ef8b2c);
+}
+
+/* ---------------- 登录 / 注册（双栏卡片） ----------------
+   两页共用一套外壳：左品牌右表单。宽度与最小高度成对设定，
+   只给宽度不给高度会让卡片被内容压成一条横幅（2.7:1 那种）。 */
+
+.login-page,
+.auth-page {
+  min-height: 100%;
+  display: grid;
+  place-items: center;
+  padding: 28px 24px;
+  background: radial-gradient(900px 500px at 15% 10%, #ffe9d2 0%, transparent 55%),
+    radial-gradient(900px 500px at 85% 90%, #e6ecf5 0%, transparent 55%), var(--surface-sunken);
+}
+
+.auth-shell {
+  display: grid;
+  grid-template-columns: 42% 58%;
+  width: min(1000px, 100%);
+  min-height: 580px;
+  border-radius: 24px;
+  overflow: hidden;
+  background: var(--surface);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+.pitch {
+  position: relative;
+  overflow: hidden;
+  color: #fff;
+  padding: 46px 42px;
+  background: linear-gradient(150deg, #2a2f3a 0%, #1f2430 55%, #241c14 100%);
+}
+
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(46px);
+  opacity: 0.42;
+}
+
+.blob-a {
+  width: 240px;
+  height: 240px;
+  top: -96px;
+  right: -86px;
+  background: var(--brand);
+}
+
+.blob-b {
+  width: 220px;
+  height: 220px;
+  bottom: -104px;
+  left: -76px;
+  background: #2fa36b;
+}
+
+.pitch-inner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.pitch-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+.pitch-logo .el-icon {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 11px;
+  background: linear-gradient(135deg, #f7b95c, var(--brand));
+}
+
+.pitch h1 {
+  margin: 40px 0 14px;
+  font-size: 27px;
+  line-height: 1.45;
+  font-weight: 700;
+}
+
+.pitch-sub {
+  color: #b9bfcc;
+  font-size: 14px;
+  line-height: 1.75;
+  margin: 0 0 30px;
+}
+
+.pitch-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.pitch-list li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13.5px;
+  color: #dfe3ea;
+}
+
+.pitch-list .el-icon {
+  flex: none;
+  color: #f7b95c;
+  font-size: 16px;
+}
+
+/* 靠 margin-top:auto 坠到卡片底部，左栏才不会被拉出一段空白 */
+.pitch-foot {
+  margin-top: auto;
+  padding-top: 28px;
+  font-size: 12px;
+  line-height: 1.75;
+  color: #7f8797;
+}
+
+.panel {
+  padding: 48px 54px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.panel-head {
+  margin-bottom: 26px;
+}
+
+.panel-head h2 {
+  margin: 0 0 6px;
+  font-size: 23px;
+  font-weight: 700;
+}
+
+.panel-head p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--ink-faint);
+}
+
+.panel .el-form-item {
+  margin-bottom: 22px;
+}
+
+@media (max-width: 767px) {
+  .login-page,
+  .auth-page {
+    padding: 14px;
+  }
+
+  .auth-shell {
+    grid-template-columns: 1fr;
+    width: min(430px, 100%);
+    min-height: 0;
+  }
+
+  /* 手机上品牌区收成一条头部横幅，整张卡才不会又窄又长地飘在中间 */
+  .pitch {
+    padding: 24px 22px 26px;
+  }
+
+  .pitch h1 {
+    margin: 16px 0 8px;
+    font-size: 20px;
+  }
+
+  .pitch-sub {
+    margin: 0;
+    font-size: 12.5px;
+  }
+
+  .pitch-list,
+  .pitch-foot {
+    display: none;
+  }
+
+  .panel {
+    padding: 26px 22px 30px;
+  }
+
+  .panel .el-form-item {
+    margin-bottom: 16px;
+  }
+}
+
+/* ---------------- 控制台列表页通用 ---------------- */
+
+/* 搜索/工具栏卡片与表格卡片之间的节奏统一 */
+.page > .el-card + .el-card,
+.page > .el-row + .el-card,
+.page > .el-card .el-tabs {
+  margin-top: 0;
+}
+
+.el-table {
+  --el-table-header-bg-color: #fafbfc;
+  --el-table-row-hover-bg-color: var(--brand-soft);
+  font-size: 13.5px;
+}
+
+.el-table--border {
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.el-table th.el-table__cell {
+  height: 42px;
+}
+
+.el-table .el-table__cell {
+  padding: 9px 0;
+}
+
+/* 表格行内操作按钮靠间距而不是默认 margin，收尾更整齐 */
+.el-table .cell .el-button + .el-button {
+  margin-left: 6px;
+}
+
+.el-tabs__item {
+  font-weight: 500;
+}
+
+.el-tabs__active-bar {
+  background-color: var(--brand);
+}
+
+.el-pagination button,
+.el-pagination .el-pager li {
+  border-radius: 7px;
+}
+
+.el-alert {
+  border-radius: var(--radius-sm);
+}
+
+.el-empty {
+  padding: 34px 0;
+}
+
+.el-empty__description {
+  color: var(--ink-faint);
+}
+
+.el-descriptions__cell {
+  padding: 9px 12px !important;
+}
+
+.el-dialog__header {
+  padding: 16px 20px;
+  margin-right: 0;
+  border-bottom: 1px solid var(--el-border-color-lighter);
+}
+
+.el-dialog__body {
+  padding: 20px;
+}
+
+.el-dialog__footer {
+  padding: 14px 20px 18px;
+}
+
+.el-drawer__body {
+  padding: 18px 20px;
+}
+
+/* ---------------- 手机端（<768px）----------------
+   这套后台是桌面优先写的，手机上要收掉内边距、让筛选条整行堆叠、
+   弹窗按视口宽度撑开，否则内容被挤成一条、表格横向溢出。 */
+
+@media (max-width: 767px) {
+  .page {
+    padding: 0;
+  }
+
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .page-title {
+    font-size: 17px;
+  }
+
+  .el-card__header {
+    padding: 12px 14px;
+  }
+
+  .el-card__body {
+    padding: 14px;
+  }
+
+  .card-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  /* 筛选区：手机上不再"一行一个条件"，改成两列紧凑排布；
+     div + 内联宽度的写法统一 flex 换行，并抹掉模板里内联 margin 造成的空隙 */
+  .search-bar,
+  .el-card .search-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 10px;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+  }
+
+  .search-bar > * {
+    margin-right: 0 !important;
+    margin-bottom: 0 !important;
+    margin-left: 0 !important;
+  }
+
+  .search-bar .el-form-item {
+    display: flex;
+    width: calc(50% - 6px);
+  }
+
+  .search-bar .el-form-item__label {
+    flex: 0 0 auto;
+    width: auto !important;
+    padding: 0 4px 0 0;
+  }
+
+  .search-bar .el-form-item__content {
+    flex: 1 1 auto;
+    min-width: 0;
+    margin-left: 0 !important;
+  }
+
+  .search-bar .el-form-item__content > .el-select,
+  .search-bar .el-form-item__content > .el-input,
+  .search-bar .el-form-item__content > .el-input-number {
+    width: 100% !important;
+  }
+
+  /* div 写法的筛选控件沿用模板给的固定宽度，但不超过半行，否则按钮会被挤到下一行 */
+  .search-bar > .el-select,
+  .search-bar > .el-input {
+    flex: 0 1 auto;
+    max-width: calc(50% - 5px);
+  }
+
+  .search-bar .el-form-item:last-child,
+  .search-bar > .muted {
+    flex: 1 0 100%;
+  }
+
+  .search-bar .el-form-item:last-child .el-form-item__content {
+    display: flex;
+    gap: 8px;
+  }
+
+  .search-bar > .muted {
+    line-height: 1.5;
+  }
+
+  .search-bar .el-form-item:last-child .el-button + .el-button,
+  .search-bar .el-button + .el-button {
+    margin-left: 0;
+  }
+
+  .el-table {
+    font-size: 12.5px;
+  }
+
+  .el-table .cell {
+    padding: 0 8px;
+  }
+
+  /* 兜底：Element Plus 的固定列是 position:sticky，窄屏下会一直悬在右侧盖住数据。
+     现在所有表格都不再用 fixed 列，这里留着防止以后有人把某一列钉回去。 */
+  .el-table .el-table__cell.el-table-fixed-column--left,
+  .el-table .el-table__cell.el-table-fixed-column--right,
+  .el-table .el-table__header-wrapper th.el-table__fixed-right-patch,
+  .el-table .el-table__body-wrapper td.el-table__fixed-right-patch {
+    position: static !important;
+  }
+
+  .el-table .el-table-fixed-column--left.is-first-column:before,
+  .el-table .el-table-fixed-column--left.is-last-column:before,
+  .el-table .el-table-fixed-column--right.is-first-column:before,
+  .el-table .el-table-fixed-column--right.is-last-column:before {
+    box-shadow: none !important;
+  }
+
+  /* 操作列按钮在窄屏折成两列，不再挤成一条长串 */
+  .el-table td.table-ops .cell {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  /* 状态列的标签与开关上下排，交给 flex 控制行距 */
+  .el-table td.state-cell .cell {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+
+  .el-table td.table-ops .cell .el-button {
+    flex: 0 0 auto;
+  }
+
+  .el-table td.table-ops .cell .el-button + .el-button {
+    margin-left: 0;
+  }
+
+  .el-table th.el-table__cell {
+    height: 36px;
+  }
+
+  .el-table .el-table__cell {
+    padding: 7px 0;
+  }
+
+  .el-table__body-wrapper,
+  .el-table__header-wrapper {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .el-alert {
+    padding: 8px 10px;
+  }
+
+  .el-alert__title,
+  .el-alert .muted {
+    font-size: 12.5px;
+    line-height: 1.55;
+  }
+
+  .pagination-bar {
+    justify-content: center;
+  }
+
+  .el-pagination {
+    flex-wrap: wrap;
+    justify-content: center;
+    row-gap: 6px;
+  }
+
+  .el-dialog {
+    width: 92vw !important;
+    margin-top: 6vh !important;
+  }
+
+  .el-dialog__header,
+  .el-dialog__footer {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .el-dialog__body {
+    padding: 16px;
+    max-height: 64vh;
+    overflow-y: auto;
+  }
+
+  .el-drawer {
+    width: 88vw !important;
+  }
+
+  .el-descriptions__cell {
+    padding: 7px 9px !important;
+  }
+
+  .stat-card .el-card__body {
+    gap: 10px;
+  }
+
+  .stat-card .stat-value {
+    font-size: 21px;
+  }
+
+  .stat-card .stat-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 19px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
