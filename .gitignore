@@ -1,0 +1,46 @@
+# 构建产物
+target/
+*.jar
+!**/gradle/wrapper/*.jar
+dist/
+dist.tar.gz
+*.war
+
+# 依赖
+node_modules/
+
+# IDE / 编辑器
+.idea/
+*.iml
+.vscode/
+*.swp
+
+# 运行期
+logs/
+*.log
+nohup.out
+
+# 环境与密钥
+canteen.env
+.env.local
+.env.*.local
+*.env.bak
+.canteen_dbpw
+.canteen_jwt
+
+# 打包与临时文件
+_release/
+tmp_ops/
+shots/
+*.tmp
+canteen-nutrition-system-code-*.zip
+
+# 论文与开题材料留在本地，仓库只保留建库脚本
+/docs/*
+!/docs/sql/
+docs/sql/backup-*.sql.gz
+
+# 操作系统
+.DS_Store
+Thumbs.db
+desktop.ini
